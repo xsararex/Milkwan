@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>BREW — สั่งเครื่องดื่ม</title>
+<title>MILk by Aum — สั่งเครื่องดื่ม</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root {
-  --red: #D42B2B;
-  --cream: #F5F0E8;
+  --red: #c02b3f;
+  --cream: #e6e5e5;
   --dark: #1A1A1A;
   --mid: #666;
   --light-gray: #EBEBEB;
@@ -81,7 +83,7 @@ body {
   box-shadow:0 2px 10px rgba(0,0,0,0.06);
   border:2px solid transparent;
 }
-.menu-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(212,43,43,0.15); border-color:var(--red); }
+.menu-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(192,43,63,0.15); border-color:var(--red); }
 .card-img {
   width:100%; aspect-ratio:1;
   background:var(--light-gray); border-radius:14px;
@@ -138,7 +140,7 @@ body {
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:transform 0.15s, background 0.15s;
 }
-.qty-btn:hover { transform:scale(1.08); background:#B52222; }
+.qty-btn:hover { transform:scale(1.08); background:#9a1e30; }
 .qty-btn:disabled { background:var(--light-gray); color:var(--mid); cursor:not-allowed; transform:none; }
 .qty-num { min-width:70px; text-align:center; font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--dark); line-height:1; }
 
@@ -172,7 +174,7 @@ body {
   padding:16px 22px;
   display:flex; align-items:center; justify-content:space-between;
   cursor:pointer;
-  box-shadow:0 8px 24px rgba(212,43,43,0.25);
+  box-shadow:0 8px 24px rgba(192,43,63,0.25);
   transition:transform 0.15s;
 }
 .add-cart-bar:hover { transform:translateY(-2px); }
@@ -193,7 +195,6 @@ body {
 .cart-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:40px; }
 .cart-empty-icon { font-size:60px; opacity:0.3; }
 .cart-empty-text { font-size:16px; color:var(--mid); text-align:center; }
-
 .cart-items { padding:0 24px; }
 .cart-item {
   background:var(--white); border-radius:16px;
@@ -222,12 +223,10 @@ body {
 }
 .ci-qty-btn:hover { background:var(--red); color:white; }
 .ci-qty-num { font-size:14px; font-weight:700; min-width:22px; text-align:center; }
-
 .cart-summary { margin:0 24px 12px; background:var(--white); border-radius:18px; padding:16px 18px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
 .sum-row { display:flex; justify-content:space-between; font-size:14px; color:var(--mid); padding:3px 0; }
 .sum-row.total { font-weight:700; color:var(--dark); font-size:16px; border-top:1px solid var(--light-gray); margin-top:8px; padding-top:10px; }
 .sum-row.total .sum-price { color:var(--red); }
-
 .checkout-btn {
   margin:0 24px 28px;
   background:var(--dark); border-radius:18px;
@@ -239,23 +238,21 @@ body {
 .checkout-total { color:white; font-size:20px; font-weight:700; }
 .checkout-go { background:var(--red); color:white; border:none; border-radius:12px; padding:11px 18px; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
 
-/* CHECKOUT SCREEN */
+/* CHECKOUT */
 .delivery-opts { display:flex; gap:8px; }
 .del-opt { flex:1; border:2px solid var(--light-gray); border-radius:14px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.2s; background:white; }
-.del-opt.selected { border-color:var(--red); background:rgba(212,43,43,0.05); }
+.del-opt.selected { border-color:var(--red); background:rgba(192,43,63,0.05); }
 .del-opt-icon { font-size:20px; margin-bottom:3px; }
 .del-opt-label { font-size:12px; font-weight:700; color:var(--dark); }
 .del-opt-sub { font-size:10px; color:var(--mid); margin-top:1px; }
-
 .payment-opts { display:flex; gap:8px; }
 .pay-opt { flex:1; border:2px solid var(--light-gray); border-radius:14px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.2s; background:white; }
-.pay-opt.selected { border-color:var(--red); background:rgba(212,43,43,0.05); }
+.pay-opt.selected { border-color:var(--red); background:rgba(192,43,63,0.05); }
 .pay-opt-icon { font-size:20px; margin-bottom:3px; }
 .pay-opt-label { font-size:12px; font-weight:700; color:var(--dark); }
 .pay-opt-sub { font-size:10px; color:var(--mid); margin-top:1px; }
-.pay-note { display:none; margin-top:10px; background:rgba(212,43,43,0.07); border-radius:12px; padding:10px 14px; font-size:13px; color:var(--dark); font-weight:600; }
+.pay-note { display:none; margin-top:10px; background:rgba(192,43,63,0.07); border-radius:12px; padding:10px 14px; font-size:13px; color:var(--dark); font-weight:600; }
 .pay-note.show { display:block; }
-
 .addr-box { display:none; margin-top:12px; }
 .addr-box.show { display:block; }
 .addr-input { width:100%; border:2px solid var(--light-gray); border-radius:12px; padding:11px 13px; font-family:'Sarabun',sans-serif; font-size:13px; resize:none; background:var(--cream); color:var(--dark); margin-bottom:8px; outline:none; transition:border-color 0.2s; }
@@ -269,12 +266,11 @@ body {
 .map-pin-wrap span:first-child { font-size:28px; }
 .map-pin-label { font-size:10px; font-weight:700; color:var(--red); background:white; padding:2px 7px; border-radius:10px; margin-top:3px; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
 .map-hint { position:absolute; bottom:6px; right:8px; font-size:10px; color:rgba(0,0,0,0.35); }
-
 .info-grid { display:flex; flex-direction:column; gap:8px; }
 .info-input { width:100%; border:2px solid var(--light-gray); border-radius:12px; padding:11px 13px; font-family:'Sarabun',sans-serif; font-size:13px; background:var(--cream); color:var(--dark); outline:none; transition:border-color 0.2s; }
 .info-input:focus { border-color:var(--red); }
 
-/* QR PAY SCREEN */
+/* QR PAY */
 #qrpay { background:var(--cream); align-items:center; }
 .qr-header { width:100%; padding:52px 24px 20px; display:flex; align-items:center; gap:12px; }
 .qr-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 40px 40px; }
@@ -289,22 +285,43 @@ body {
 .qr-note { font-size:11px; color:var(--mid); margin-top:12px; text-align:center; line-height:1.5; }
 
 /* SUCCESS */
-#success { background:var(--cream); align-items:center; justify-content:center; text-align:center; padding:40px 28px; }
-.success-circle { width:110px; height:110px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:48px; margin:0 auto 22px; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+#success { background:var(--cream); align-items:center; justify-content:center; text-align:center; padding:36px 28px; }
+.success-circle { width:100px; height:100px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:44px; margin:0 auto 18px; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes popIn { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
-.success-title { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--dark); letter-spacing:1px; margin-bottom:8px; }
-.success-sub { font-size:14px; color:var(--mid); line-height:1.6; margin-bottom:10px; }
-.success-email { background:rgba(212,43,43,0.08); border:1px solid rgba(212,43,43,0.2); border-radius:12px; padding:10px 16px; font-size:13px; color:var(--red); font-weight:600; margin-bottom:24px; display:inline-block; }
-.success-summary { background:var(--white); border-radius:16px; padding:16px 20px; width:100%; margin-bottom:22px; text-align:left; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.success-title { font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--dark); letter-spacing:1px; margin-bottom:6px; }
+.success-sub { font-size:13px; color:var(--mid); line-height:1.6; margin-bottom:10px; }
+.success-email { background:rgba(192,43,63,0.08); border:1px solid rgba(192,43,63,0.2); border-radius:12px; padding:8px 14px; font-size:12px; color:var(--red); font-weight:600; margin-bottom:14px; display:inline-block; }
+.success-summary { background:var(--white); border-radius:16px; padding:14px 18px; width:100%; margin-bottom:16px; text-align:left; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .s-row { display:flex; justify-content:space-between; font-size:13px; color:var(--mid); padding:3px 0; }
 .s-row.total { font-weight:700; color:var(--dark); font-size:15px; border-top:1px solid var(--light-gray); margin-top:8px; padding-top:8px; }
 .s-row.total .sp { color:var(--red); }
-.back-home-btn { background:var(--red); color:white; border:none; border-radius:16px; padding:14px 38px; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:transform 0.15s; }
-.back-home-btn:hover { transform:scale(1.04); }
+
+/* Success buttons */
+.success-actions { display:flex; flex-direction:column; gap:10px; width:100%; }
+.save-receipt-btn {
+  background:var(--red); color:white; border:none;
+  border-radius:16px; padding:14px 20px;
+  font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700;
+  cursor:pointer; transition:transform 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 4px 16px rgba(192,43,63,0.3);
+}
+.save-receipt-btn:hover { transform:scale(1.02); }
+.save-receipt-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+.back-home-btn {
+  background:var(--dark); color:white; border:none;
+  border-radius:16px; padding:13px 20px;
+  font-family:'Sarabun',sans-serif; font-size:14px; font-weight:600;
+  cursor:pointer; transition:transform 0.15s;
+}
+.back-home-btn:hover { transform:scale(1.02); }
 
 /* TOAST */
 .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--dark); color:white; padding:11px 22px; border-radius:30px; font-size:13px; font-weight:600; z-index:999; transition:transform 0.3s; white-space:nowrap; }
 .toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Off-screen canvas receipt */
+#receiptCanvas { display:none; }
 </style>
 </head>
 <body>
@@ -323,7 +340,7 @@ body {
   </div>
   <div class="scroll-area">
     <div class="home-hero">
-      <div class="hero-tag">☕ YOUR DAILY BREW</div>
+      <div class="hero-tag">☕ YOUR DAILY Milk</div>
       <div class="hero-title">Just the Way<br>You Love It!</div>
       <div class="hero-sub">เลือกเมนู → เพิ่มท็อปปิ้ง → สั่งเลย!</div>
     </div>
@@ -347,13 +364,11 @@ body {
         <div class="dh-price" id="dhPrice">฿35</div>
       </div>
     </div>
-
     <div class="qty-control">
       <button class="qty-btn" id="qtyMinus" onclick="changeQty(-1)" disabled>−</button>
       <div class="qty-num" id="qtyNum">1</div>
       <button class="qty-btn" onclick="changeQty(1)">+</button>
     </div>
-
     <div class="sec-card">
       <div class="sec-card-title">🧁 เพิ่มท็อปปิ้ง</div>
       <div class="topping-row">
@@ -367,7 +382,6 @@ body {
         <button class="toggle-btn" id="toppingToggle" onclick="toggleTopping()"></button>
       </div>
     </div>
-
     <div class="add-cart-bar" onclick="addToCart()">
       <div>
         <div class="add-cart-label">ราคารวม</div>
@@ -395,7 +409,6 @@ body {
     <div class="detail-screen-title">ยืนยันการสั่ง</div>
   </div>
   <div class="scroll-area">
-
     <div class="sec-card">
       <div class="sec-card-title">🛵 รับสินค้า</div>
       <div class="delivery-opts">
@@ -455,7 +468,7 @@ body {
         <div class="checkout-label">ยอดรวมทั้งหมด</div>
         <div class="checkout-total">฿<span id="checkoutTotal">0</span></div>
       </div>
-      <button class="checkout-go">สั่งเลย →</button>
+      <button class="checkout-go" id="checkoutGoBtn">สั่งเลย →</button>
     </div>
   </div>
 </div>
@@ -470,17 +483,11 @@ body {
     <div class="qr-title">สแกน QR PromptPay</div>
     <div class="qr-sub">ใช้แอปธนาคารสแกน เพื่อชำระเงิน</div>
     <div class="qr-frame">
-      <!--
-        🔧 วิธีเปลี่ยน QR จริง:
-        แทน src ด้วยลิ้ง QR PromptPay ของคุณ เช่น:
-        https://promptpay.io/0812345678.png
-        หรือ generate จาก https://www.thaiqr.com
-      -->
       <div class="qr-code" id="qrCodeImg"></div>
     </div>
     <div class="qr-amount">฿<span id="qrAmount">0</span></div>
     <div class="qr-amount-sub">กรุณาชำระภายใน 10 นาที</div>
-    <button class="qr-confirm-btn" onclick="confirmPayment()">✅ ยืนยันการชำระแล้ว</button>
+    <button class="qr-confirm-btn" id="qrConfirmBtn" onclick="confirmPayment()">✅ ยืนยันการชำระแล้ว</button>
     <div class="qr-note">* หลังชำระกรุณากด "ยืนยันการชำระแล้ว"<br>ร้านจะได้รับออเดอร์ทันที</div>
   </div>
 </div>
@@ -489,24 +496,47 @@ body {
 <div class="screen" id="success">
   <div class="success-circle">✅</div>
   <div class="success-title">สั่งสำเร็จ!</div>
-  <div class="success-sub" id="successSub">ขอบคุณที่ใช้บริการ BREW</div>
+  <div class="success-sub" id="successSub">ขอบคุณที่ใช้บริการ</div>
   <div class="success-summary" id="successSummary"></div>
-  <div class="success-email">📧 ส่งใบเสร็จไปที่ xsararex@gmail.com</div>
-  <button class="back-home-btn" onclick="resetAll()">← กลับหน้าหลัก</button>
+  <div class="success-email" id="successEmailNote">📧 ส่งออเดอร์ไปที่ร้านแล้ว</div>
+  <div class="success-actions">
+    <button class="save-receipt-btn" id="saveReceiptBtn" onclick="downloadReceipt()">
+      💾 บันทึกใบเสร็จลงมือถือ
+    </button>
+    <button class="back-home-btn" onclick="resetAll()">← กลับหน้าหลัก</button>
+  </div>
 </div>
 
-</div>
+</div><!-- /phone -->
+
+<!-- Hidden canvas for receipt generation -->
+<canvas id="receiptCanvas"></canvas>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ─── MENU DATA ───
-   🔧 เปลี่ยน img: 'URL...' เป็นลิ้งรูปของคุณในแต่ละเมนู
+/* ══════════════════════════════════════════
+   🔧 ตั้งค่า EmailJS
+   ══════════════════════════════════════════
+   1. สมัครฟรีที่ https://www.emailjs.com
+   2. Add Service → Gmail → Login sekartwork@gmail.com → Copy Service ID
+   3. Create Template → Copy Template ID
+   4. Account → General → Copy Public Key
 */
+const EMAILJS_SERVICE_ID  = 'service_kuo0jok';
+const EMAILJS_TEMPLATE_ID = 'template_u1if1lr';
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+const SENDER_EMAIL        = 'sekartwork@gmail.com';
+const STORE_EMAIL         = 'xsararex@gmail.com';
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+/* ─── MENU DATA ─── */
 const MENU = [
   {
     id:1, name:'กาแฟ', price:35, emoji:'☕',
     desc:'กาแฟหอมกรุ่น คัดสรรเมล็ดกาแฟคุณภาพ',
-    img:'https://i.pinimg.com/1200x/ba/3d/03/ba3d0375ac57a203f48508a2127acc4e.jpg'
+    img:'https://github.com/xsararex/photosub/blob/main/unnamed.jpg?raw=true'
   },
   {
     id:2, name:'นมเย็น', price:35, emoji:'🥛',
@@ -516,7 +546,7 @@ const MENU = [
   {
     id:3, name:'ชาเย็น', price:35, emoji:'🍵',
     desc:'ชาไทยหอมเข้มข้น สีสวยน่าดื่ม',
-    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop'
+    img:'https://github.com/xsararex/photosub/blob/main/Gemini_Generated_Image_8l4btx8l4btx8l4b.png?raw=true'
   },
   {
     id:4, name:'โกโก้เย็น', price:35, emoji:'🍫',
@@ -531,6 +561,9 @@ let detailQty = 1;
 let toppingOn = false;
 let deliveryType = 'pickup';
 let paymentType = 'qr';
+
+// Store last order for receipt
+let lastOrder = null;
 
 /* ─── RENDER MENU ─── */
 function renderMenu() {
@@ -615,9 +648,7 @@ function renderCart() {
     return `
       <div class="cart-item">
         <div class="ci-img">
-          ${m.img
-            ? `<img src="${m.img}" alt="${m.name}" onerror="this.parentElement.textContent='${m.emoji}'">`
-            : m.emoji}
+          ${m.img ? `<img src="${m.img}" alt="${m.name}" onerror="this.parentElement.textContent='${m.emoji}'">` : m.emoji}
         </div>
         <div class="ci-info">
           <div class="ci-name">${m.name}</div>
@@ -640,8 +671,7 @@ function renderCart() {
 
   content.innerHTML = `
     <div class="cart-items">${items}</div>
-    <div class="cart-summary">
-      ${sumRows}
+    <div class="cart-summary">${sumRows}
       <div class="sum-row total"><span>รวมทั้งหมด</span><span class="sum-price">฿${gt}</span></div>
     </div>
     <div class="checkout-btn" onclick="goCheckout()">
@@ -710,7 +740,6 @@ function placeOrder() {
   if (paymentType==='qr') {
     const total=cartTotal();
     document.getElementById('qrAmount').textContent=total;
-    // 🔧 เปลี่ยน URL เป็น QR PromptPay จริงของคุณ
     document.getElementById('qrCodeImg').style.backgroundImage =
       `url('https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=PromptPay%3A0812345678%3A${total}THB&bgcolor=ffffff&color=1A1A1A&margin=2')`;
     showScreen('qrpay');
@@ -721,45 +750,239 @@ function placeOrder() {
 
 function confirmPayment() { finishOrder(); }
 
-function finishOrder() {
-  const name=document.getElementById('custName').value.trim();
-  const phone=document.getElementById('custPhone').value.trim();
-  const addr=document.getElementById('addrInput').value.trim();
-  const total=cartTotal();
+/* ─── FINISH ORDER + EmailJS ─── */
+async function finishOrder() {
+  const name  = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const addr  = document.getElementById('addrInput').value.trim();
+  const email = document.getElementById('custEmail').value.trim();
+  const total = cartTotal();
+  const orderId = 'MILK-' + Date.now().toString().slice(-6);
+  const orderDate = new Date().toLocaleString('th-TH');
 
-  const itemsText=cart.map(c=>{
-    const m=MENU.find(x=>x.id===c.menuId);
-    return `${m.name}${c.topping?'+วิปครีม':''} x${c.qty} = ฿${(m.price+(c.topping?10:0))*c.qty}`;
+  const itemsList = cart.map(c => {
+    const m = MENU.find(x=>x.id===c.menuId);
+    return `• ${m.name}${c.topping?' + วิปครีม':''} x${c.qty}  =  ฿${(m.price+(c.topping?10:0))*c.qty}`;
   }).join('\n');
 
-  const subject=encodeURIComponent(`BREW ORDER – ${name} – ฿${total}`);
-  const body=encodeURIComponent(
-    `📋 ออเดอร์ใหม่จาก BREW\n──────────────────\n`+
-    `ชื่อ: ${name}\nเบอร์: ${phone}\n\nสินค้า:\n${itemsText}\n\n`+
-    `รับสินค้า: ${deliveryType==='delivery'?`ส่งที่บ้าน – ${addr}`:'รับที่ร้าน'}\n`+
-    `ชำระเงิน: ${paymentType==='qr'?'สแกน QR PromptPay':'เก็บเงินปลายทาง'}\n`+
-    `ยอดรวม: ฿${total}\n──────────────────`
-  );
-  window.location.href=`mailto:xsararex@gmail.com?subject=${subject}&body=${body}`;
+  // Save for receipt generation
+  lastOrder = { name, phone, email, addr, total, orderId, orderDate,
+    items: cart.map(c => {
+      const m = MENU.find(x=>x.id===c.menuId);
+      return { name: m.name, topping: c.topping, qty: c.qty, price: (m.price+(c.topping?10:0))*c.qty };
+    }),
+    delivery: deliveryType, payment: paymentType
+  };
 
-  const sumRows=cart.map(c=>{
-    const m=MENU.find(x=>x.id===c.menuId);
-    return `<div class="s-row"><span>${m.name}${c.topping?'+วิปครีม':''} x${c.qty}</span><span>฿${(m.price+(c.topping?10:0))*c.qty}</span></div>`;
-  }).join('');
+  // Loading state
+  const goBtn = document.getElementById('checkoutGoBtn');
+  const qrBtn = document.getElementById('qrConfirmBtn');
+  if (goBtn) { goBtn.textContent='⏳ กำลังส่ง...'; goBtn.disabled=true; }
+  if (qrBtn) { qrBtn.textContent='⏳ กำลังส่ง...'; qrBtn.disabled=true; }
 
-  document.getElementById('successSub').innerHTML=
-    `ขอบคุณคุณ <strong>${name}</strong> ที่สั่งกับ BREW<br>`+
+  // Send via EmailJS
+  const templateParams = {
+    from_email    : SENDER_EMAIL,
+    to_email      : STORE_EMAIL,
+    order_id      : orderId,
+    order_date    : orderDate,
+    customer_name : name,
+    customer_phone: phone,
+    customer_email: email || '(ไม่ระบุ)',
+    items_list    : itemsList,
+    delivery_type : deliveryType==='delivery' ? 'ส่งที่บ้าน' : 'รับที่ร้าน',
+    address       : deliveryType==='delivery' ? addr : '-',
+    payment_type  : paymentType==='qr' ? 'สแกน QR / PromptPay' : 'เก็บเงินปลายทาง',
+    total         : `฿${total}`,
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+    document.getElementById('successEmailNote').textContent = '📧 ส่งออเดอร์ไปที่ร้านแล้ว ✅';
+  } catch(err) {
+    console.warn('EmailJS:', err);
+    // Fallback mailto
+    const subject = encodeURIComponent(`MILK ORDER ${orderId} – ${name} – ฿${total}`);
+    const body = encodeURIComponent(
+      `📋 ออเดอร์ใหม่จาก MILk by Aum\nหมายเลข: ${orderId}\nวันที่: ${orderDate}\n──────────────────\n`+
+      `ชื่อ: ${name}\nเบอร์: ${phone}\n\nสินค้า:\n${itemsList}\n\n`+
+      `รับสินค้า: ${deliveryType==='delivery'?`ส่งที่บ้าน – ${addr}`:'รับที่ร้าน'}\n`+
+      `ชำระเงิน: ${paymentType==='qr'?'QR PromptPay':'เก็บเงินปลายทาง'}\n`+
+      `ยอดรวม: ฿${total}`
+    );
+    window.open(`mailto:${STORE_EMAIL}?subject=${subject}&body=${body}`);
+    document.getElementById('successEmailNote').textContent = '⚠️ EmailJS ยังไม่ตั้งค่า — เปิด mail แทน';
+  } finally {
+    if (goBtn) { goBtn.textContent='สั่งเลย →'; goBtn.disabled=false; }
+    if (qrBtn) { qrBtn.textContent='✅ ยืนยันการชำระแล้ว'; qrBtn.disabled=false; }
+  }
+
+  // Build success screen
+  const sumRows = lastOrder.items.map(it =>
+    `<div class="s-row"><span>${it.name}${it.topping?'+วิปครีม':''} x${it.qty}</span><span>฿${it.price}</span></div>`
+  ).join('');
+
+  document.getElementById('successSub').innerHTML =
+    `<small style="color:#aaa;font-size:11px">หมายเลข: ${orderId} · ${orderDate}</small><br>`+
+    `ขอบคุณคุณ <strong>${name}</strong> ที่สั่งกับ MILk by Aum<br>`+
     (deliveryType==='delivery'?`จัดส่งไปที่ท่านเร็วๆ นี้ 🛵`:`โปรดมารับที่ร้านได้เลย 🏪`)+
     `<br><small style="color:#aaa">${paymentType==='cod'?'💵 ชำระเงินปลายทาง':'📲 ชำระ QR แล้ว'}</small>`;
 
-  document.getElementById('successSummary').innerHTML=
-    sumRows+`<div class="s-row total"><span>รวมทั้งหมด</span><span class="sp">฿${total}</span></div>`;
+  document.getElementById('successSummary').innerHTML =
+    sumRows + `<div class="s-row total"><span>รวมทั้งหมด</span><span class="sp">฿${total}</span></div>`;
 
   showScreen('success');
 }
 
+/* ══════════════════════════════════════════
+   📄 GENERATE RECEIPT IMAGE & DOWNLOAD
+   ══════════════════════════════════════════ */
+function downloadReceipt() {
+  if (!lastOrder) { showToast('⚠️ ไม่มีข้อมูลออเดอร์'); return; }
+
+  const btn = document.getElementById('saveReceiptBtn');
+  btn.textContent = '⏳ กำลังสร้างใบเสร็จ...';
+  btn.disabled = true;
+
+  const o = lastOrder;
+  const W = 640;
+  const lineH = 34;
+  const itemCount = o.items.length;
+  const H = 220 + (itemCount * lineH) + 260;
+
+  const canvas = document.getElementById('receiptCanvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // ── Background ──
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Top accent bar ──
+  ctx.fillStyle = '#c02b3f';
+  ctx.fillRect(0, 0, W, 8);
+
+  // ── Logo / Shop name ──
+  ctx.fillStyle = '#c02b3f';
+  ctx.font = 'bold 36px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('MILk by Aum', W/2, 60);
+
+  ctx.fillStyle = '#888';
+  ctx.font = '18px sans-serif';
+  ctx.fillText('ใบเสร็จรับเงิน / Receipt', W/2, 88);
+
+  // ── Divider ──
+  ctx.strokeStyle = '#EBEBEB';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(40, 106); ctx.lineTo(W-40, 106); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── Order info ──
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#333';
+  ctx.font = 'bold 18px sans-serif';
+  let y = 138;
+
+  function drawRow(label, value, bold=false) {
+    ctx.fillStyle = '#888';
+    ctx.font = '16px sans-serif';
+    ctx.fillText(label, 48, y);
+    ctx.fillStyle = bold ? '#c02b3f' : '#1A1A1A';
+    ctx.font = bold ? 'bold 18px sans-serif' : '16px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(value, W-48, y);
+    ctx.textAlign = 'left';
+    y += 30;
+  }
+
+  drawRow('หมายเลขออเดอร์', o.orderId);
+  drawRow('วันที่', o.orderDate);
+  drawRow('ชื่อลูกค้า', o.name);
+  drawRow('เบอร์โทร', o.phone);
+  drawRow('การรับสินค้า', o.delivery==='delivery'?`ส่งที่บ้าน`:'รับที่ร้าน');
+  drawRow('ชำระเงิน', o.payment==='qr'?'QR PromptPay':'เก็บเงินปลายทาง');
+  if (o.delivery==='delivery' && o.addr) drawRow('ที่อยู่', o.addr.length>24?o.addr.slice(0,24)+'…':o.addr);
+
+  y += 8;
+  // ── Items header ──
+  ctx.strokeStyle = '#EBEBEB';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(40, y-4); ctx.lineTo(W-40, y-4); ctx.stroke();
+  y += 10;
+
+  ctx.fillStyle = '#888';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('รายการ', 48, y);
+  ctx.textAlign = 'right';
+  ctx.fillText('ราคา', W-48, y);
+  ctx.textAlign = 'left';
+  y += 24;
+
+  // ── Items list ──
+  o.items.forEach(it => {
+    ctx.fillStyle = '#1A1A1A';
+    ctx.font = '16px sans-serif';
+    const label = `${it.name}${it.topping?' + วิปครีม':''} × ${it.qty}`;
+    ctx.fillText(label, 48, y);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#333';
+    ctx.fillText(`฿${it.price}`, W-48, y);
+    ctx.textAlign = 'left';
+    y += lineH;
+  });
+
+  // ── Total ──
+  y += 8;
+  ctx.fillStyle = '#EBEBEB';
+  ctx.fillRect(40, y-14, W-80, 2);
+  y += 14;
+
+  ctx.fillStyle = '#c02b3f';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('รวมทั้งหมด', 48, y);
+  ctx.textAlign = 'right';
+  ctx.fillText(`฿${o.total}`, W-48, y);
+  ctx.textAlign = 'left';
+  y += 44;
+
+  // ── Thank you ──
+  ctx.fillStyle = '#c02b3f';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('ขอบคุณที่ใช้บริการ MILk by Aum ☕', W/2, y);
+  y += 28;
+  ctx.fillStyle = '#aaa';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('xsararex@gmail.com', W/2, y);
+
+  // ── Bottom bar ──
+  ctx.fillStyle = '#c02b3f';
+  ctx.fillRect(0, H-8, W, 8);
+
+  // ── Download ──
+  try {
+    const link = document.createElement('a');
+    link.download = `receipt_${o.orderId}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('💾 บันทึกใบเสร็จแล้ว!');
+  } catch(e) {
+    // Mobile fallback — open in new tab
+    const win = window.open();
+    win.document.write(`<img src="${canvas.toDataURL()}" style="max-width:100%" />`);
+    showToast('📱 กดค้างที่รูปเพื่อบันทึก');
+  }
+
+  btn.textContent = '💾 บันทึกใบเสร็จลงมือถือ';
+  btn.disabled = false;
+}
+
 function resetAll() {
-  cart=[];
+  cart=[]; lastOrder=null;
   renderMenu();
   showScreen('home');
 }
@@ -774,7 +997,7 @@ function showToast(msg) {
   const t=document.getElementById('toast');
   t.textContent=msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+  setTimeout(()=>t.classList.remove('show'),2400);
 }
 
 renderMenu();
