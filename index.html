@@ -6,809 +6,777 @@
 <title>BREW — สั่งเครื่องดื่ม</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --red: #D42B2B;
-    --cream: #F5F0E8;
-    --dark: #1A1A1A;
-    --mid: #555;
-    --light-gray: #EBEBEB;
-    --white: #FFFFFF;
-    --topping: #F0A500;
-  }
+:root {
+  --red: #D42B2B;
+  --cream: #F5F0E8;
+  --dark: #1A1A1A;
+  --mid: #666;
+  --light-gray: #EBEBEB;
+  --white: #FFFFFF;
+  --gold: #F0A500;
+  --green: #2AAB6C;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Sarabun',sans-serif;
+  background:#D6CFC2;
+  display:flex; justify-content:center; align-items:flex-start;
+  min-height:100vh; padding:24px 16px;
+}
+.phone {
+  width:390px; background:var(--cream);
+  border-radius:44px; overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,0.4);
+  position:relative;
+}
+.screen { display:none; flex-direction:column; min-height:844px; }
+.screen.active { display:flex; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* TOP BAR */
+.top-bar {
+  padding:52px 24px 16px;
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--cream);
+}
+.logo { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--red); letter-spacing:2px; line-height:1; }
+.top-right { display:flex; gap:10px; align-items:center; }
+.icon-btn {
+  width:40px; height:40px; background:var(--white);
+  border-radius:50%; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  transition:transform 0.15s; position:relative;
+}
+.icon-btn:hover { transform:scale(1.1); }
+.cart-badge {
+  position:absolute; top:-4px; right:-4px;
+  background:var(--red); color:white;
+  font-size:10px; font-weight:700;
+  width:18px; height:18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--cream);
+}
 
-  body {
-    font-family: 'Sarabun', sans-serif;
-    background: #E8E3D8;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
-  }
+/* HERO */
+.home-hero {
+  margin:0 24px 20px;
+  background:var(--red); border-radius:22px;
+  padding:22px 22px; color:white; position:relative; overflow:hidden;
+}
+.home-hero::before { content:''; position:absolute; right:-30px; top:-30px; width:140px; height:140px; background:rgba(255,255,255,0.07); border-radius:50%; }
+.home-hero::after { content:''; position:absolute; right:40px; bottom:-40px; width:90px; height:90px; background:rgba(255,255,255,0.05); border-radius:50%; }
+.hero-tag { font-size:10px; letter-spacing:2px; text-transform:uppercase; opacity:0.7; margin-bottom:5px; }
+.hero-title { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:1px; line-height:1.1; }
+.hero-sub { font-size:13px; opacity:0.8; margin-top:5px; }
 
-  .phone {
-    width: 390px;
-    min-height: 844px;
-    background: var(--cream);
-    border-radius: 44px;
-    overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.35);
-    position: relative;
-  }
+.sec-label { padding:0 24px 12px; font-size:15px; font-weight:700; color:var(--dark); }
 
-  /* SCREENS */
-  .screen { display: none; flex-direction: column; min-height: 844px; }
-  .screen.active { display: flex; }
+/* MENU GRID */
+.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 24px 24px; }
+.menu-card {
+  background:var(--white); border-radius:20px;
+  padding:14px 12px 12px; cursor:pointer;
+  transition:transform 0.2s, box-shadow 0.2s;
+  position:relative; overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  border:2px solid transparent;
+}
+.menu-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(212,43,43,0.15); border-color:var(--red); }
+.card-img {
+  width:100%; aspect-ratio:1;
+  background:var(--light-gray); border-radius:14px;
+  overflow:hidden; margin-bottom:10px;
+  display:flex; align-items:center; justify-content:center; font-size:48px;
+}
+.card-img img { width:100%; height:100%; object-fit:cover; border-radius:14px; }
+.card-name { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:2px; }
+.card-price { font-size:12px; color:var(--red); font-weight:600; }
+.card-qty-badge {
+  position:absolute; top:10px; right:10px;
+  background:var(--red); color:white;
+  font-size:11px; font-weight:700;
+  width:22px; height:22px; border-radius:50%;
+  display:none; align-items:center; justify-content:center;
+}
+.card-qty-badge.show { display:flex; }
 
-  /* ─── HOME ─── */
-  #home {
-    background: var(--cream);
-  }
+/* DETAIL */
+.detail-header { padding:52px 24px 14px; display:flex; align-items:center; gap:12px; background:var(--cream); }
+.back-btn {
+  background:var(--white); border:none; border-radius:50%;
+  width:38px; height:38px; cursor:pointer; font-size:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:transform 0.15s;
+}
+.back-btn:hover { transform:scale(1.08); }
+.detail-screen-title { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--dark); letter-spacing:1px; }
 
-  .home-header {
-    padding: 54px 28px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.detail-hero {
+  margin:0 24px;
+  background:var(--red); border-radius:22px;
+  padding:24px 22px; color:white;
+  display:flex; align-items:center; gap:16px;
+  position:relative; overflow:hidden;
+}
+.detail-hero::after { content:''; position:absolute; right:-20px; top:-20px; width:100px; height:100px; background:rgba(255,255,255,0.07); border-radius:50%; }
+.dh-img {
+  width:100px; height:100px; flex-shrink:0;
+  background:rgba(255,255,255,0.15); border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:48px; overflow:hidden;
+}
+.dh-img img { width:100%; height:100%; object-fit:cover; border-radius:16px; }
+.dh-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; line-height:1; }
+.dh-desc { font-size:12px; opacity:0.8; margin-top:5px; line-height:1.4; }
+.dh-price { font-size:20px; font-weight:700; margin-top:8px; }
 
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    color: var(--red);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
+/* QTY CONTROL */
+.qty-control { display:flex; align-items:center; justify-content:center; gap:0; margin:16px 24px; }
+.qty-btn {
+  width:44px; height:44px; background:var(--red); color:white;
+  border:none; border-radius:14px; font-size:22px; font-weight:700;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform 0.15s, background 0.15s;
+}
+.qty-btn:hover { transform:scale(1.08); background:#B52222; }
+.qty-btn:disabled { background:var(--light-gray); color:var(--mid); cursor:not-allowed; transform:none; }
+.qty-num { min-width:70px; text-align:center; font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--dark); line-height:1; }
 
-  .header-icons { display: flex; gap: 14px; }
-  .icon-btn {
-    width: 40px; height: 40px;
-    background: var(--white);
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
-  }
-  .icon-btn:hover { transform: scale(1.1); }
+/* SEC CARD */
+.sec-card { margin:12px 24px 0; background:var(--white); border-radius:18px; padding:16px 18px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+.sec-card-title { font-size:14px; font-weight:700; color:var(--dark); margin-bottom:12px; }
 
-  .home-hero {
-    margin: 0 28px 24px;
-    background: var(--red);
-    border-radius: 22px;
-    padding: 24px 22px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-  .home-hero::after {
-    content: '';
-    position: absolute;
-    right: -20px; top: -20px;
-    width: 120px; height: 120px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-  }
-  .hero-tag { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 6px; }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1px; line-height: 1.1; }
-  .hero-sub { font-size: 13px; opacity: 0.8; margin-top: 6px; }
+/* TOPPING */
+.topping-row { display:flex; align-items:center; justify-content:space-between; }
+.topping-left { display:flex; align-items:center; gap:10px; }
+.topping-icon { font-size:24px; }
+.topping-name { font-size:14px; font-weight:600; color:var(--dark); }
+.topping-sub { font-size:12px; color:var(--mid); margin-top:1px; }
+.toggle-btn {
+  width:50px; height:26px; background:var(--light-gray);
+  border-radius:13px; border:none; cursor:pointer;
+  position:relative; transition:background 0.25s; flex-shrink:0;
+}
+.toggle-btn.on { background:var(--red); }
+.toggle-btn::after {
+  content:''; position:absolute; width:20px; height:20px;
+  background:white; border-radius:50%; top:3px; left:3px;
+  transition:left 0.25s; box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.toggle-btn.on::after { left:27px; }
 
-  .section-label {
-    padding: 0 28px 14px;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--dark);
-  }
+/* ADD TO CART BAR */
+.add-cart-bar {
+  margin:16px 24px 28px;
+  background:var(--red); border-radius:18px;
+  padding:16px 22px;
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(212,43,43,0.25);
+  transition:transform 0.15s;
+}
+.add-cart-bar:hover { transform:translateY(-2px); }
+.add-cart-label { color:white; font-size:12px; opacity:0.8; margin-bottom:2px; }
+.add-cart-total { color:white; font-size:20px; font-weight:700; }
+.add-cart-btn {
+  background:white; color:var(--red); border:none; border-radius:12px;
+  padding:10px 18px; font-family:'Sarabun',sans-serif;
+  font-size:14px; font-weight:700; cursor:pointer; transition:transform 0.15s;
+}
+.add-cart-btn:hover { transform:scale(1.04); }
 
-  .menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    padding: 0 28px 32px;
-  }
+/* SCROLL */
+.scroll-area { flex:1; overflow-y:auto; }
+.scroll-area::-webkit-scrollbar { width:0; }
 
-  .menu-card {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 18px 14px 14px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    border: 2px solid transparent;
-  }
-  .menu-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(212,43,43,0.15);
-    border-color: var(--red);
-  }
+/* CART SCREEN */
+.cart-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:40px; }
+.cart-empty-icon { font-size:60px; opacity:0.3; }
+.cart-empty-text { font-size:16px; color:var(--mid); text-align:center; }
 
-  .card-img-wrap {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--light-gray);
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 12px;
-    overflow: hidden;
-    position: relative;
-  }
-  .card-img-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    border-radius: 14px;
-  }
-  .card-img-wrap .placeholder-icon {
-    font-size: 44px;
-    opacity: 0.3;
-  }
-  .upload-overlay {
-    position: absolute; inset: 0;
-    background: rgba(212,43,43,0.7);
-    border-radius: 14px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
-    cursor: pointer;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    gap: 4px;
-  }
-  .menu-card:hover .upload-overlay { opacity: 1; }
-  .upload-overlay span:first-child { font-size: 22px; }
+.cart-items { padding:0 24px; }
+.cart-item {
+  background:var(--white); border-radius:16px;
+  padding:14px 16px; margin-bottom:10px;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.ci-img {
+  width:56px; height:56px; border-radius:12px;
+  background:var(--light-gray);
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; flex-shrink:0; overflow:hidden;
+}
+.ci-img img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
+.ci-info { flex:1; }
+.ci-name { font-size:14px; font-weight:700; color:var(--dark); }
+.ci-sub { font-size:12px; color:var(--mid); margin-top:2px; }
+.ci-price { font-size:14px; font-weight:700; color:var(--red); white-space:nowrap; }
+.ci-qty-ctrl { display:flex; align-items:center; gap:6px; margin-top:6px; }
+.ci-qty-btn {
+  width:26px; height:26px; border-radius:8px;
+  background:var(--light-gray); border:none; cursor:pointer;
+  font-size:16px; font-weight:700; color:var(--dark);
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.15s;
+}
+.ci-qty-btn:hover { background:var(--red); color:white; }
+.ci-qty-num { font-size:14px; font-weight:700; min-width:22px; text-align:center; }
 
-  .card-name { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
-  .card-price { font-size: 13px; color: var(--red); font-weight: 600; }
-  .card-hot-badge {
-    position: absolute; top: 12px; right: 12px;
-    background: var(--red);
-    color: white; font-size: 11px; font-weight: 700;
-    padding: 3px 8px; border-radius: 20px;
-  }
+.cart-summary { margin:0 24px 12px; background:var(--white); border-radius:18px; padding:16px 18px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+.sum-row { display:flex; justify-content:space-between; font-size:14px; color:var(--mid); padding:3px 0; }
+.sum-row.total { font-weight:700; color:var(--dark); font-size:16px; border-top:1px solid var(--light-gray); margin-top:8px; padding-top:10px; }
+.sum-row.total .sum-price { color:var(--red); }
 
-  /* ─── DETAIL SCREEN ─── */
-  #detail {
-    background: var(--cream);
-  }
+.checkout-btn {
+  margin:0 24px 28px;
+  background:var(--dark); border-radius:18px;
+  padding:16px 22px; display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,0.15); transition:transform 0.15s;
+}
+.checkout-btn:hover { transform:translateY(-2px); }
+.checkout-label { color:rgba(255,255,255,0.6); font-size:12px; margin-bottom:2px; }
+.checkout-total { color:white; font-size:20px; font-weight:700; }
+.checkout-go { background:var(--red); color:white; border:none; border-radius:12px; padding:11px 18px; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
 
-  .detail-header {
-    padding: 54px 28px 16px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .back-btn {
-    background: var(--white);
-    border: none; border-radius: 50%;
-    width: 38px; height: 38px;
-    cursor: pointer; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
-  }
-  .back-btn:hover { transform: scale(1.1); }
-  .detail-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--dark); letter-spacing: 1px; }
+/* CHECKOUT SCREEN */
+.delivery-opts { display:flex; gap:8px; }
+.del-opt { flex:1; border:2px solid var(--light-gray); border-radius:14px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.2s; background:white; }
+.del-opt.selected { border-color:var(--red); background:rgba(212,43,43,0.05); }
+.del-opt-icon { font-size:20px; margin-bottom:3px; }
+.del-opt-label { font-size:12px; font-weight:700; color:var(--dark); }
+.del-opt-sub { font-size:10px; color:var(--mid); margin-top:1px; }
 
-  .detail-hero {
-    margin: 0 28px;
-    background: var(--red);
-    border-radius: 24px;
-    padding: 28px 24px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    min-height: 160px;
-    display: flex; align-items: center; gap: 18px;
-  }
-  .detail-hero-img {
-    width: 110px; height: 110px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 18px;
-    flex-shrink: 0;
-    overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 52px;
-  }
-  .detail-hero-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
-  .detail-hero-info {}
-  .detail-hero-name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; line-height: 1; }
-  .detail-hero-desc { font-size: 13px; opacity: 0.8; margin-top: 6px; line-height: 1.4; }
-  .detail-hero-price { font-size: 22px; font-weight: 700; margin-top: 10px; }
+.payment-opts { display:flex; gap:8px; }
+.pay-opt { flex:1; border:2px solid var(--light-gray); border-radius:14px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.2s; background:white; }
+.pay-opt.selected { border-color:var(--red); background:rgba(212,43,43,0.05); }
+.pay-opt-icon { font-size:20px; margin-bottom:3px; }
+.pay-opt-label { font-size:12px; font-weight:700; color:var(--dark); }
+.pay-opt-sub { font-size:10px; color:var(--mid); margin-top:1px; }
+.pay-note { display:none; margin-top:10px; background:rgba(212,43,43,0.07); border-radius:12px; padding:10px 14px; font-size:13px; color:var(--dark); font-weight:600; }
+.pay-note.show { display:block; }
 
-  .section-card {
-    margin: 18px 28px 0;
-    background: var(--white);
-    border-radius: 20px;
-    padding: 18px 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  }
-  .section-card-title {
-    font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 14px;
-  }
+.addr-box { display:none; margin-top:12px; }
+.addr-box.show { display:block; }
+.addr-input { width:100%; border:2px solid var(--light-gray); border-radius:12px; padding:11px 13px; font-family:'Sarabun',sans-serif; font-size:13px; resize:none; background:var(--cream); color:var(--dark); margin-bottom:8px; outline:none; transition:border-color 0.2s; }
+.addr-input:focus { border-color:var(--red); }
+.map-box { width:100%; height:120px; background:linear-gradient(135deg,#d4e8c2,#b8d4a8); border-radius:14px; border:2px dashed #8BBF76; position:relative; overflow:hidden; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.map-grid-lines { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.2) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.2) 1px,transparent 1px); background-size:20px 20px; }
+.map-road { position:absolute; width:60%; height:3px; background:rgba(255,255,255,0.6); top:55%; left:20%; border-radius:2px; }
+.map-road::before { content:''; position:absolute; width:3px; height:70px; background:rgba(255,255,255,0.6); left:40%; top:-28px; border-radius:2px; }
+.map-pin-wrap { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; animation:pinBounce 1.5s ease-in-out infinite; }
+@keyframes pinBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+.map-pin-wrap span:first-child { font-size:28px; }
+.map-pin-label { font-size:10px; font-weight:700; color:var(--red); background:white; padding:2px 7px; border-radius:10px; margin-top:3px; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
+.map-hint { position:absolute; bottom:6px; right:8px; font-size:10px; color:rgba(0,0,0,0.35); }
 
-  .topping-row {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .topping-info { display: flex; align-items: center; gap: 12px; }
-  .topping-icon { font-size: 26px; }
-  .topping-name { font-size: 14px; font-weight: 600; color: var(--dark); }
-  .topping-price-tag { font-size: 12px; color: var(--mid); margin-top: 2px; }
+.info-grid { display:flex; flex-direction:column; gap:8px; }
+.info-input { width:100%; border:2px solid var(--light-gray); border-radius:12px; padding:11px 13px; font-family:'Sarabun',sans-serif; font-size:13px; background:var(--cream); color:var(--dark); outline:none; transition:border-color 0.2s; }
+.info-input:focus { border-color:var(--red); }
 
-  .toggle-btn {
-    width: 52px; height: 28px;
-    background: var(--light-gray);
-    border-radius: 14px;
-    border: none; cursor: pointer;
-    position: relative; transition: background 0.25s;
-  }
-  .toggle-btn.on { background: var(--red); }
-  .toggle-btn::after {
-    content: '';
-    position: absolute;
-    width: 22px; height: 22px;
-    background: white;
-    border-radius: 50%;
-    top: 3px; left: 3px;
-    transition: left 0.25s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-  .toggle-btn.on::after { left: 27px; }
+/* QR PAY SCREEN */
+#qrpay { background:var(--cream); align-items:center; }
+.qr-header { width:100%; padding:52px 24px 20px; display:flex; align-items:center; gap:12px; }
+.qr-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 40px 40px; }
+.qr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--dark); letter-spacing:1px; margin-bottom:6px; text-align:center; }
+.qr-sub { font-size:13px; color:var(--mid); text-align:center; margin-bottom:20px; }
+.qr-frame { width:220px; height:220px; background:white; border-radius:20px; padding:14px; box-shadow:0 8px 32px rgba(0,0,0,0.12); display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+.qr-code { width:100%; height:100%; background:center/cover no-repeat; border-radius:8px; }
+.qr-amount { font-family:'Bebas Neue',sans-serif; font-size:44px; color:var(--red); letter-spacing:1px; margin-bottom:4px; }
+.qr-amount-sub { font-size:13px; color:var(--mid); margin-bottom:22px; }
+.qr-confirm-btn { background:var(--green); color:white; border:none; border-radius:16px; padding:14px 36px; font-family:'Sarabun',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:transform 0.15s; box-shadow:0 4px 16px rgba(42,171,108,0.3); }
+.qr-confirm-btn:hover { transform:scale(1.04); }
+.qr-note { font-size:11px; color:var(--mid); margin-top:12px; text-align:center; line-height:1.5; }
 
-  /* Delivery options */
-  .delivery-options { display: flex; gap: 10px; }
-  .delivery-opt {
-    flex: 1;
-    border: 2px solid var(--light-gray);
-    border-radius: 14px;
-    padding: 12px 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-    background: white;
-  }
-  .delivery-opt.selected {
-    border-color: var(--red);
-    background: rgba(212,43,43,0.05);
-  }
-  .delivery-opt-icon { font-size: 22px; margin-bottom: 4px; }
-  .delivery-opt-label { font-size: 13px; font-weight: 600; color: var(--dark); }
-  .delivery-opt-sub { font-size: 11px; color: var(--mid); margin-top: 2px; }
+/* SUCCESS */
+#success { background:var(--cream); align-items:center; justify-content:center; text-align:center; padding:40px 28px; }
+.success-circle { width:110px; height:110px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:48px; margin:0 auto 22px; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popIn { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+.success-title { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--dark); letter-spacing:1px; margin-bottom:8px; }
+.success-sub { font-size:14px; color:var(--mid); line-height:1.6; margin-bottom:10px; }
+.success-email { background:rgba(212,43,43,0.08); border:1px solid rgba(212,43,43,0.2); border-radius:12px; padding:10px 16px; font-size:13px; color:var(--red); font-weight:600; margin-bottom:24px; display:inline-block; }
+.success-summary { background:var(--white); border-radius:16px; padding:16px 20px; width:100%; margin-bottom:22px; text-align:left; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.s-row { display:flex; justify-content:space-between; font-size:13px; color:var(--mid); padding:3px 0; }
+.s-row.total { font-weight:700; color:var(--dark); font-size:15px; border-top:1px solid var(--light-gray); margin-top:8px; padding-top:8px; }
+.s-row.total .sp { color:var(--red); }
+.back-home-btn { background:var(--red); color:white; border:none; border-radius:16px; padding:14px 38px; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:transform 0.15s; }
+.back-home-btn:hover { transform:scale(1.04); }
 
-  .address-box {
-    display: none;
-    margin-top: 14px;
-  }
-  .address-box.show { display: block; }
-
-  .address-input {
-    width: 100%;
-    border: 2px solid var(--light-gray);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    resize: none;
-    background: var(--cream);
-    color: var(--dark);
-    margin-bottom: 10px;
-    transition: border-color 0.2s;
-    outline: none;
-  }
-  .address-input:focus { border-color: var(--red); }
-
-  .map-placeholder {
-    width: 100%;
-    height: 130px;
-    background: linear-gradient(135deg, #d4e8c2 0%, #b8d4a8 50%, #c8ddb8 100%);
-    border-radius: 14px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px dashed #8BBF76;
-  }
-  .map-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  .map-roads {
-    position: absolute;
-    width: 60%; height: 3px;
-    background: rgba(255,255,255,0.6);
-    top: 55%; left: 20%;
-    border-radius: 2px;
-  }
-  .map-roads::before {
-    content:'';
-    position: absolute;
-    width: 3px; height: 80px;
-    background: rgba(255,255,255,0.6);
-    left: 40%; top: -30px;
-    border-radius: 2px;
-  }
-  .map-pin {
-    position: relative; z-index: 2;
-    display: flex; flex-direction: column; align-items: center;
-    font-size: 32px; line-height: 1;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-    animation: pinBounce 1.5s ease-in-out infinite;
-  }
-  @keyframes pinBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  .map-pin-label {
-    font-size: 11px; font-weight: 700; color: var(--red);
-    background: white; padding: 3px 8px; border-radius: 10px;
-    margin-top: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-  .map-tap-hint {
-    position: absolute; bottom: 8px; right: 10px;
-    font-size: 11px; color: rgba(0,0,0,0.4);
-  }
-
-  /* Customer info */
-  .info-grid { display: flex; flex-direction: column; gap: 10px; }
-  .info-input {
-    width: 100%;
-    border: 2px solid var(--light-gray);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    background: var(--cream);
-    color: var(--dark);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .info-input:focus { border-color: var(--red); }
-
-  /* Order bar */
-  .order-bar {
-    margin: 20px 28px 28px;
-    background: var(--dark);
-    border-radius: 20px;
-    padding: 18px 22px;
-    display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
-  .order-bar:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
-  .order-bar-left {}
-  .order-bar-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
-  .order-bar-total { font-size: 22px; font-weight: 700; color: white; }
-  .order-bar-total span { color: var(--topping); }
-  .order-btn {
-    background: var(--red);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    padding: 13px 22px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.15s;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .order-btn:hover { transform: scale(1.04); }
-
-  /* ─── SUCCESS SCREEN ─── */
-  #success {
-    background: var(--cream);
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 28px;
-  }
-  .success-circle {
-    width: 120px; height: 120px;
-    background: var(--red);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 52px;
-    margin: 0 auto 28px;
-    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  @keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .success-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 38px; color: var(--dark); letter-spacing: 1px;
-    margin-bottom: 10px;
-  }
-  .success-sub {
-    font-size: 15px; color: var(--mid); line-height: 1.6; margin-bottom: 12px;
-  }
-  .success-email {
-    background: rgba(212,43,43,0.08);
-    border: 1px solid rgba(212,43,43,0.2);
-    border-radius: 12px;
-    padding: 10px 16px;
-    font-size: 13px; color: var(--red); font-weight: 600;
-    margin-bottom: 32px;
-    display: inline-block;
-  }
-  .back-home-btn {
-    background: var(--red);
-    color: white;
-    border: none;
-    border-radius: 18px;
-    padding: 16px 40px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .back-home-btn:hover { transform: scale(1.04); }
-
-  .order-summary-pill {
-    background: var(--white);
-    border-radius: 18px;
-    padding: 18px 22px;
-    width: 100%;
-    margin-bottom: 24px;
-    text-align: left;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  }
-  .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--mid); padding: 4px 0; }
-  .summary-row.total { font-weight: 700; color: var(--dark); font-size: 16px; border-top: 1px solid var(--light-gray); margin-top: 8px; padding-top: 10px; }
-  .summary-row.total .price { color: var(--red); }
-
-  /* hidden file input */
-  .file-input { display: none; }
-
-  /* Scroll */
-  .scroll-content { flex: 1; overflow-y: auto; }
-  .scroll-content::-webkit-scrollbar { width: 0; }
-
-  /* Loading toast */
-  .toast {
-    position: fixed;
-    bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--dark);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-size: 14px; font-weight: 600;
-    z-index: 999;
-    transition: transform 0.3s;
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
+/* TOAST */
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--dark); color:white; padding:11px 22px; border-radius:30px; font-size:13px; font-weight:600; z-index:999; transition:transform 0.3s; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 <div class="phone">
 
-  <!-- ══════════════ HOME SCREEN ══════════════ -->
-  <div class="screen active" id="home">
-    <div class="home-header">
-      <div class="logo">BREW</div>
-      <div class="header-icons">
-        <button class="icon-btn">🔔</button>
-        <button class="icon-btn">🛒</button>
-      </div>
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home">
+  <div class="top-bar">
+    <div class="logo">MILk by Aum</div>
+    <div class="top-right">
+      <button class="icon-btn" onclick="showScreen('cart')">
+        🛒
+        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </button>
     </div>
+  </div>
+  <div class="scroll-area">
     <div class="home-hero">
-      <div class="hero-tag">☕ TODAY'S SPECIAL</div>
-      <div class="hero-title">Your Daily Brew<br>Just the Way You Love It!</div>
-      <div class="hero-sub">เลือกเมนูที่คุณชื่นชอบ → เพิ่มท็อปปิ้ง → สั่งเลย!</div>
+      <div class="hero-tag">☕ YOUR DAILY BREW</div>
+      <div class="hero-title">Just the Way<br>You Love It!</div>
+      <div class="hero-sub">เลือกเมนู → เพิ่มท็อปปิ้ง → สั่งเลย!</div>
     </div>
-
-    <div class="section-label">เมนูทั้งหมด</div>
-    <div class="menu-grid" id="menuGrid">
-      <!-- cards inserted by JS -->
-    </div>
+    <div class="sec-label">เมนูทั้งหมด</div>
+    <div class="menu-grid" id="menuGrid"></div>
   </div>
-
-  <!-- ══════════════ DETAIL SCREEN ══════════════ -->
-  <div class="screen" id="detail">
-    <div class="detail-header">
-      <button class="back-btn" onclick="showScreen('home')">←</button>
-      <div class="detail-title" id="detailTitle">กาแฟ</div>
-    </div>
-
-    <div class="scroll-content">
-      <div class="detail-hero">
-        <div class="detail-hero-img" id="detailHeroImg">☕</div>
-        <div class="detail-hero-info">
-          <div class="detail-hero-name" id="detailHeroName">กาแฟ</div>
-          <div class="detail-hero-desc" id="detailHeroDesc">กาแฟหอมกรุ่น คัดสรรจากเมล็ดกาแฟคุณภาพดี</div>
-          <div class="detail-hero-price" id="detailHeroPrice">฿35</div>
-        </div>
-      </div>
-
-      <!-- Topping -->
-      <div class="section-card">
-        <div class="section-card-title">🧁 เพิ่มท็อปปิ้ง</div>
-        <div class="topping-row">
-          <div class="topping-info">
-            <div class="topping-icon">🍦</div>
-            <div>
-              <div class="topping-name">วิปครีม</div>
-              <div class="topping-price-tag">+฿10 บาท</div>
-            </div>
-          </div>
-          <button class="toggle-btn" id="toppingToggle" onclick="toggleTopping()"></button>
-        </div>
-      </div>
-
-      <!-- Delivery -->
-      <div class="section-card">
-        <div class="section-card-title">🛵 รับสินค้า</div>
-        <div class="delivery-options">
-          <div class="delivery-opt selected" id="opt-pickup" onclick="selectDelivery('pickup')">
-            <div class="delivery-opt-icon">🏪</div>
-            <div class="delivery-opt-label">รับที่ร้าน</div>
-            <div class="delivery-opt-sub">ฟรี</div>
-          </div>
-          <div class="delivery-opt" id="opt-delivery" onclick="selectDelivery('delivery')">
-            <div class="delivery-opt-icon">🛵</div>
-            <div class="delivery-opt-label">ส่งที่บ้าน</div>
-            <div class="delivery-opt-sub">ใส่ที่อยู่</div>
-          </div>
-        </div>
-
-        <div class="address-box" id="addressBox">
-          <textarea class="address-input" id="addressInput" rows="3" placeholder="ที่อยู่จัดส่ง เช่น 123 ถ.นิมมาน เมืองเชียงใหม่ 50200"></textarea>
-          <div class="map-placeholder" onclick="showMapToast()">
-            <div class="map-grid"></div>
-            <div class="map-roads"></div>
-            <div class="map-pin">📍<div class="map-pin-label">ปักหมุดที่นี่</div></div>
-            <div class="map-tap-hint">แตะเพื่อเลือกตำแหน่ง</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Customer info -->
-      <div class="section-card">
-        <div class="section-card-title">👤 ข้อมูลผู้สั่ง</div>
-        <div class="info-grid">
-          <input class="info-input" id="custName" type="text" placeholder="ชื่อ-นามสกุล">
-          <input class="info-input" id="custPhone" type="tel" placeholder="เบอร์โทรศัพท์">
-          <input class="info-input" id="custEmail" type="email" placeholder="อีเมล (สำหรับรับใบเสร็จ)">
-        </div>
-      </div>
-
-      <!-- Order bar -->
-      <div class="order-bar" onclick="placeOrder()">
-        <div class="order-bar-left">
-          <div class="order-bar-label">ยอดรวมทั้งหมด</div>
-          <div class="order-bar-total" id="totalDisplay">฿<span id="totalAmt">35</span></div>
-        </div>
-        <button class="order-btn" id="orderBtn">
-          สั่งเลย ☕
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════ SUCCESS SCREEN ══════════════ -->
-  <div class="screen" id="success">
-    <div class="success-circle">✅</div>
-    <div class="success-title">สั่งสำเร็จแล้ว!</div>
-    <div class="success-sub" id="successSub">ขอบคุณที่สั่งกับ BREW<br>เราจะดำเนินการทันที</div>
-
-    <div class="order-summary-pill" id="successSummary"></div>
-
-    <div class="success-email">📧 ส่งใบเสร็จไปที่ xsararex@gmail.com</div>
-
-    <button class="back-home-btn" onclick="showScreen('home')">← กลับหน้าหลัก</button>
-  </div>
-
 </div>
 
-<!-- Hidden file inputs -->
-<input type="file" class="file-input" id="fileInputGlobal" accept="image/*" onchange="handleImageUpload(event)">
+<!-- ══ DETAIL ══ -->
+<div class="screen" id="detail">
+  <div class="detail-header">
+    <button class="back-btn" onclick="showScreen('home')">←</button>
+    <div class="detail-screen-title" id="detailTitle">กาแฟ</div>
+  </div>
+  <div class="scroll-area">
+    <div class="detail-hero">
+      <div class="dh-img" id="dhImg">☕</div>
+      <div>
+        <div class="dh-name" id="dhName">กาแฟ</div>
+        <div class="dh-desc" id="dhDesc">กาแฟหอมกรุ่น</div>
+        <div class="dh-price" id="dhPrice">฿35</div>
+      </div>
+    </div>
 
-<!-- Toast -->
-<div class="toast" id="toast">📍 บันทึกตำแหน่งแล้ว!</div>
+    <div class="qty-control">
+      <button class="qty-btn" id="qtyMinus" onclick="changeQty(-1)" disabled>−</button>
+      <div class="qty-num" id="qtyNum">1</div>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
 
-<script>
-const MENU = [
-  { id: 1, name: 'กาแฟ', price: 35, emoji: '☕', desc: 'กาแฟหอมกรุ่น คัดสรรจากเมล็ดกาแฟคุณภาพดี', img: null },
-  { id: 2, name: 'นมเย็น', price: 35, emoji: '🥛', desc: 'นมสดเย็นหวานมัน ดื่มง่ายสดชื่น', img: null },
-  { id: 3, name: 'ชาเย็น', price: 35, emoji: '🍵', desc: 'ชาไทยหอมเข้มข้น สีสวยน่าดื่ม', img: null },
-  { id: 4, name: 'โกโก้เย็น', price: 35, emoji: '🍫', desc: 'โกโก้เข้มข้น หวานกำลังดี', img: null },
-];
+    <div class="sec-card">
+      <div class="sec-card-title">🧁 เพิ่มท็อปปิ้ง</div>
+      <div class="topping-row">
+        <div class="topping-left">
+          <div class="topping-icon">🍦</div>
+          <div>
+            <div class="topping-name">วิปครีม</div>
+            <div class="topping-sub">+฿10 ต่อแก้ว</div>
+          </div>
+        </div>
+        <button class="toggle-btn" id="toppingToggle" onclick="toggleTopping()"></button>
+      </div>
+    </div>
 
-let currentItem = null;
-let toppingOn = false;
-let deliveryType = 'pickup';
-let uploadTargetId = null;
+    <div class="add-cart-bar" onclick="addToCart()">
+      <div>
+        <div class="add-cart-label">ราคารวม</div>
+        <div class="add-cart-total">฿<span id="detailTotal">35</span></div>
+      </div>
+      <button class="add-cart-btn">+ ใส่ตะกร้า</button>
+    </div>
+  </div>
+</div>
 
-function renderMenu() {
-  const grid = document.getElementById('menuGrid');
-  grid.innerHTML = MENU.map(item => `
-    <div class="menu-card" onclick="openDetail(${item.id})">
-      <div class="card-img-wrap" id="imgWrap_${item.id}">
-        ${item.img
-          ? `<img src="${item.img}" alt="${item.name}">`
-          : `<div class="placeholder-icon">${item.emoji}</div>`
-        }
-        <div class="upload-overlay" onclick="triggerUpload(event,${item.id})">
-          <span>📷</span>
-          <span>อัปโหลดรูป</span>
+<!-- ══ CART ══ -->
+<div class="screen" id="cart">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('home')">←</button>
+    <div class="logo" style="font-size:26px">🛒 ตะกร้า</div>
+    <div style="width:40px"></div>
+  </div>
+  <div class="scroll-area" id="cartContent"></div>
+</div>
+
+<!-- ══ CHECKOUT ══ -->
+<div class="screen" id="checkout">
+  <div class="detail-header">
+    <button class="back-btn" onclick="showScreen('cart')">←</button>
+    <div class="detail-screen-title">ยืนยันการสั่ง</div>
+  </div>
+  <div class="scroll-area">
+
+    <div class="sec-card">
+      <div class="sec-card-title">🛵 รับสินค้า</div>
+      <div class="delivery-opts">
+        <div class="del-opt selected" id="opt-pickup" onclick="selectDelivery('pickup')">
+          <div class="del-opt-icon">🏪</div>
+          <div class="del-opt-label">รับที่ร้าน</div>
+          <div class="del-opt-sub">ฟรี</div>
+        </div>
+        <div class="del-opt" id="opt-delivery" onclick="selectDelivery('delivery')">
+          <div class="del-opt-icon">🛵</div>
+          <div class="del-opt-label">ส่งที่บ้าน</div>
+          <div class="del-opt-sub">ใส่ที่อยู่</div>
         </div>
       </div>
-      <div class="card-name">${item.name}</div>
-      <div class="card-price">฿${item.price}</div>
+      <div class="addr-box" id="addrBox">
+        <textarea class="addr-input" id="addrInput" rows="2" placeholder="ที่อยู่จัดส่ง เช่น 123 ถ.นิมมาน เมืองเชียงใหม่"></textarea>
+        <div class="map-box" onclick="showToast('📍 บันทึกตำแหน่งแล้ว!')">
+          <div class="map-grid-lines"></div>
+          <div class="map-road"></div>
+          <div class="map-pin-wrap">
+            <span>📍</span>
+            <div class="map-pin-label">ปักหมุดที่นี่</div>
+          </div>
+          <div class="map-hint">แตะเพื่อเลือกตำแหน่ง</div>
+        </div>
+      </div>
     </div>
-  `).join('');
+
+    <div class="sec-card">
+      <div class="sec-card-title">💳 ชำระเงิน</div>
+      <div class="payment-opts">
+        <div class="pay-opt selected" id="pay-qr" onclick="selectPayment('qr')">
+          <div class="pay-opt-icon">📲</div>
+          <div class="pay-opt-label">สแกนจ่าย</div>
+          <div class="pay-opt-sub">PromptPay / QR</div>
+        </div>
+        <div class="pay-opt" id="pay-cod" onclick="selectPayment('cod')">
+          <div class="pay-opt-icon">💵</div>
+          <div class="pay-opt-label">เก็บปลายทาง</div>
+          <div class="pay-opt-sub">ชำระเมื่อรับ</div>
+        </div>
+      </div>
+      <div class="pay-note show" id="payNote">📲 ชำระผ่าน QR Code / PromptPay</div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-card-title">👤 ข้อมูลผู้สั่ง</div>
+      <div class="info-grid">
+        <input class="info-input" id="custName" type="text" placeholder="ชื่อ-นามสกุล">
+        <input class="info-input" id="custPhone" type="tel" placeholder="เบอร์โทรศัพท์">
+        <input class="info-input" id="custEmail" type="email" placeholder="อีเมล (สำหรับรับใบเสร็จ)">
+      </div>
+    </div>
+
+    <div class="checkout-btn" onclick="placeOrder()">
+      <div>
+        <div class="checkout-label">ยอดรวมทั้งหมด</div>
+        <div class="checkout-total">฿<span id="checkoutTotal">0</span></div>
+      </div>
+      <button class="checkout-go">สั่งเลย →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QR PAY ══ -->
+<div class="screen" id="qrpay">
+  <div class="qr-header">
+    <button class="back-btn" onclick="showScreen('checkout')">←</button>
+    <div class="detail-screen-title">สแกนชำระเงิน</div>
+  </div>
+  <div class="qr-body">
+    <div class="qr-title">สแกน QR PromptPay</div>
+    <div class="qr-sub">ใช้แอปธนาคารสแกน เพื่อชำระเงิน</div>
+    <div class="qr-frame">
+      <!--
+        🔧 วิธีเปลี่ยน QR จริง:
+        แทน src ด้วยลิ้ง QR PromptPay ของคุณ เช่น:
+        https://promptpay.io/0812345678.png
+        หรือ generate จาก https://www.thaiqr.com
+      -->
+      <div class="qr-code" id="qrCodeImg"></div>
+    </div>
+    <div class="qr-amount">฿<span id="qrAmount">0</span></div>
+    <div class="qr-amount-sub">กรุณาชำระภายใน 10 นาที</div>
+    <button class="qr-confirm-btn" onclick="confirmPayment()">✅ ยืนยันการชำระแล้ว</button>
+    <div class="qr-note">* หลังชำระกรุณากด "ยืนยันการชำระแล้ว"<br>ร้านจะได้รับออเดอร์ทันที</div>
+  </div>
+</div>
+
+<!-- ══ SUCCESS ══ -->
+<div class="screen" id="success">
+  <div class="success-circle">✅</div>
+  <div class="success-title">สั่งสำเร็จ!</div>
+  <div class="success-sub" id="successSub">ขอบคุณที่ใช้บริการ BREW</div>
+  <div class="success-summary" id="successSummary"></div>
+  <div class="success-email">📧 ส่งใบเสร็จไปที่ xsararex@gmail.com</div>
+  <button class="back-home-btn" onclick="resetAll()">← กลับหน้าหลัก</button>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── MENU DATA ───
+   🔧 เปลี่ยน img: 'URL...' เป็นลิ้งรูปของคุณในแต่ละเมนู
+*/
+const MENU = [
+  {
+    id:1, name:'กาแฟ', price:35, emoji:'☕',
+    desc:'กาแฟหอมกรุ่น คัดสรรเมล็ดกาแฟคุณภาพ',
+    img:'https://i.pinimg.com/1200x/ba/3d/03/ba3d0375ac57a203f48508a2127acc4e.jpg'
+  },
+  {
+    id:2, name:'นมเย็น', price:35, emoji:'🥛',
+    desc:'นมสดเย็นหวานมัน ดื่มง่ายสดชื่น',
+    img:'https://i.pinimg.com/1200x/91/6d/a9/916da9ba63ab2cefa98935f2c82a3553.jpg'
+  },
+  {
+    id:3, name:'ชาเย็น', price:35, emoji:'🍵',
+    desc:'ชาไทยหอมเข้มข้น สีสวยน่าดื่ม',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop'
+  },
+  {
+    id:4, name:'โกโก้เย็น', price:35, emoji:'🍫',
+    desc:'โกโก้เข้มข้น หวานกำลังดี',
+    img:'https://images.unsplash.com/photo-1517578239113-b03992dcdd25?w=400&h=400&fit=crop'
+  },
+];
+
+let cart = [];
+let currentItem = null;
+let detailQty = 1;
+let toppingOn = false;
+let deliveryType = 'pickup';
+let paymentType = 'qr';
+
+/* ─── RENDER MENU ─── */
+function renderMenu() {
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = MENU.map(item => {
+    const qty = cart.filter(c=>c.menuId===item.id).reduce((s,c)=>s+c.qty,0);
+    return `
+      <div class="menu-card" onclick="openDetail(${item.id})">
+        <div class="card-img">
+          ${item.img
+            ? `<img src="${item.img}" alt="${item.name}" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:48px">${item.emoji}</span>`
+            : `<span>${item.emoji}</span>`}
+        </div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-price">฿${item.price}</div>
+        <div class="card-qty-badge ${qty>0?'show':''}">${qty}</div>
+      </div>`;
+  }).join('');
+  updateCartBadge();
 }
 
-function triggerUpload(e, id) {
-  e.stopPropagation();
-  uploadTargetId = id;
-  document.getElementById('fileInputGlobal').click();
+function updateCartBadge() {
+  const total = cart.reduce((s,c)=>s+c.qty,0);
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = total;
+  badge.style.display = total>0 ? 'flex' : 'none';
 }
 
-function handleImageUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const item = MENU.find(m => m.id === uploadTargetId);
-    if (item) {
-      item.img = ev.target.result;
-      renderMenu();
-      // update detail hero if same item open
-      if (currentItem && currentItem.id === item.id) {
-        updateDetailHero(item);
-      }
-    }
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function updateDetailHero(item) {
-  const heroImg = document.getElementById('detailHeroImg');
-  heroImg.innerHTML = item.img
-    ? `<img src="${item.img}" alt="${item.name}">`
-    : item.emoji;
-}
-
+/* ─── DETAIL ─── */
 function openDetail(id) {
-  currentItem = MENU.find(m => m.id === id);
-  toppingOn = false;
-  deliveryType = 'pickup';
-
+  currentItem = MENU.find(m=>m.id===id);
+  detailQty = 1; toppingOn = false;
   document.getElementById('detailTitle').textContent = currentItem.name;
-  document.getElementById('detailHeroName').textContent = currentItem.name;
-  document.getElementById('detailHeroDesc').textContent = currentItem.desc;
-  document.getElementById('detailHeroPrice').textContent = `฿${currentItem.price}`;
-  updateDetailHero(currentItem);
-
-  // reset toggles
+  document.getElementById('dhName').textContent = currentItem.name;
+  document.getElementById('dhDesc').textContent = currentItem.desc;
+  document.getElementById('dhPrice').textContent = `฿${currentItem.price}`;
+  const dhImg = document.getElementById('dhImg');
+  dhImg.innerHTML = currentItem.img
+    ? `<img src="${currentItem.img}" alt="${currentItem.name}" onerror="this.parentElement.textContent='${currentItem.emoji}'">`
+    : currentItem.emoji;
   document.getElementById('toppingToggle').classList.remove('on');
-  document.getElementById('opt-pickup').classList.add('selected');
-  document.getElementById('opt-delivery').classList.remove('selected');
-  document.getElementById('addressBox').classList.remove('show');
-  document.getElementById('custName').value = '';
-  document.getElementById('custPhone').value = '';
-  document.getElementById('custEmail').value = '';
-  document.getElementById('addressInput').value = '';
-
-  updateTotal();
+  document.getElementById('qtyNum').textContent = 1;
+  document.getElementById('qtyMinus').disabled = true;
+  updateDetailTotal();
   showScreen('detail');
+}
+
+function changeQty(d) {
+  detailQty = Math.max(1, detailQty + d);
+  document.getElementById('qtyNum').textContent = detailQty;
+  document.getElementById('qtyMinus').disabled = detailQty <= 1;
+  updateDetailTotal();
 }
 
 function toggleTopping() {
   toppingOn = !toppingOn;
-  const btn = document.getElementById('toppingToggle');
-  toppingOn ? btn.classList.add('on') : btn.classList.remove('on');
-  updateTotal();
+  document.getElementById('toppingToggle').classList.toggle('on', toppingOn);
+  updateDetailTotal();
 }
 
-function selectDelivery(type) {
-  deliveryType = type;
-  document.getElementById('opt-pickup').classList.toggle('selected', type === 'pickup');
-  document.getElementById('opt-delivery').classList.toggle('selected', type === 'delivery');
-  document.getElementById('addressBox').classList.toggle('show', type === 'delivery');
-  updateTotal();
+function updateDetailTotal() {
+  document.getElementById('detailTotal').textContent = (currentItem.price + (toppingOn?10:0)) * detailQty;
 }
 
-function updateTotal() {
-  const base = currentItem ? currentItem.price : 35;
-  const top = toppingOn ? 10 : 0;
-  document.getElementById('totalAmt').textContent = base + top;
+function addToCart() {
+  cart.push({ menuId: currentItem.id, topping: toppingOn, qty: detailQty });
+  renderMenu();
+  showToast(`✅ เพิ่ม ${currentItem.name} x${detailQty} แล้ว`);
+  setTimeout(() => showScreen('home'), 500);
 }
 
-function showMapToast() {
-  showToast('📍 บันทึกตำแหน่งแล้ว!');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-async function placeOrder() {
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const address = document.getElementById('addressInput').value.trim();
-
-  if (!name || !phone) {
-    showToast('⚠️ กรุณากรอกชื่อและเบอร์โทร');
+/* ─── CART ─── */
+function renderCart() {
+  const content = document.getElementById('cartContent');
+  if (!cart.length) {
+    content.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div class="cart-empty-text">ตะกร้าว่างเปล่า<br>เลือกเมนูที่ชื่นชอบก่อนนะ</div></div>`;
     return;
   }
-  if (deliveryType === 'delivery' && !address) {
-    showToast('⚠️ กรุณาใส่ที่อยู่จัดส่ง');
-    return;
+  const items = cart.map((c,i) => {
+    const m = MENU.find(x=>x.id===c.menuId);
+    const lp = (m.price+(c.topping?10:0))*c.qty;
+    return `
+      <div class="cart-item">
+        <div class="ci-img">
+          ${m.img
+            ? `<img src="${m.img}" alt="${m.name}" onerror="this.parentElement.textContent='${m.emoji}'">`
+            : m.emoji}
+        </div>
+        <div class="ci-info">
+          <div class="ci-name">${m.name}</div>
+          <div class="ci-sub">${c.topping?'+ วิปครีม':'ไม่มีท็อปปิ้ง'}</div>
+          <div class="ci-qty-ctrl">
+            <button class="ci-qty-btn" onclick="cartQty(${i},-1)">−</button>
+            <div class="ci-qty-num">${c.qty}</div>
+            <button class="ci-qty-btn" onclick="cartQty(${i},1)">+</button>
+          </div>
+        </div>
+        <div class="ci-price">฿${lp}</div>
+      </div>`;
+  }).join('');
+
+  const gt = cartTotal();
+  const sumRows = cart.map(c=>{
+    const m=MENU.find(x=>x.id===c.menuId);
+    return `<div class="sum-row"><span>${m.name}${c.topping?'+วิปครีม':''} x${c.qty}</span><span>฿${(m.price+(c.topping?10:0))*c.qty}</span></div>`;
+  }).join('');
+
+  content.innerHTML = `
+    <div class="cart-items">${items}</div>
+    <div class="cart-summary">
+      ${sumRows}
+      <div class="sum-row total"><span>รวมทั้งหมด</span><span class="sum-price">฿${gt}</span></div>
+    </div>
+    <div class="checkout-btn" onclick="goCheckout()">
+      <div>
+        <div class="checkout-label">ยอดรวม</div>
+        <div class="checkout-total">฿${gt}</div>
+      </div>
+      <button class="checkout-go">ยืนยันสั่ง →</button>
+    </div>`;
+}
+
+function cartQty(i, d) {
+  cart[i].qty = Math.max(0, cart[i].qty + d);
+  if (cart[i].qty === 0) cart.splice(i,1);
+  renderMenu(); renderCart();
+}
+
+function cartTotal() {
+  return cart.reduce((s,c)=>{
+    const m=MENU.find(x=>x.id===c.menuId);
+    return s+(m.price+(c.topping?10:0))*c.qty;
+  },0);
+}
+
+/* ─── CHECKOUT ─── */
+function goCheckout() {
+  if (!cart.length) { showToast('⚠️ ตะกร้าว่าง'); return; }
+  document.getElementById('checkoutTotal').textContent = cartTotal();
+  deliveryType='pickup'; paymentType='qr';
+  document.getElementById('opt-pickup').classList.add('selected');
+  document.getElementById('opt-delivery').classList.remove('selected');
+  document.getElementById('pay-qr').classList.add('selected');
+  document.getElementById('pay-cod').classList.remove('selected');
+  document.getElementById('addrBox').classList.remove('show');
+  document.getElementById('payNote').textContent = '📲 ชำระผ่าน QR Code / PromptPay';
+  document.getElementById('payNote').classList.add('show');
+  document.getElementById('custName').value='';
+  document.getElementById('custPhone').value='';
+  document.getElementById('custEmail').value='';
+  showScreen('checkout');
+}
+
+function selectDelivery(t) {
+  deliveryType=t;
+  document.getElementById('opt-pickup').classList.toggle('selected',t==='pickup');
+  document.getElementById('opt-delivery').classList.toggle('selected',t==='delivery');
+  document.getElementById('addrBox').classList.toggle('show',t==='delivery');
+}
+
+function selectPayment(t) {
+  paymentType=t;
+  document.getElementById('pay-qr').classList.toggle('selected',t==='qr');
+  document.getElementById('pay-cod').classList.toggle('selected',t==='cod');
+  const note=document.getElementById('payNote');
+  note.textContent = t==='cod' ? '💵 ชำระเงินปลายทางเมื่อได้รับสินค้า' : '📲 ชำระผ่าน QR Code / PromptPay';
+  note.classList.add('show');
+}
+
+function placeOrder() {
+  const name=document.getElementById('custName').value.trim();
+  const phone=document.getElementById('custPhone').value.trim();
+  const addr=document.getElementById('addrInput').value.trim();
+  if (!name||!phone){showToast('⚠️ กรุณากรอกชื่อและเบอร์โทร');return;}
+  if (deliveryType==='delivery'&&!addr){showToast('⚠️ กรุณาใส่ที่อยู่จัดส่ง');return;}
+
+  if (paymentType==='qr') {
+    const total=cartTotal();
+    document.getElementById('qrAmount').textContent=total;
+    // 🔧 เปลี่ยน URL เป็น QR PromptPay จริงของคุณ
+    document.getElementById('qrCodeImg').style.backgroundImage =
+      `url('https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=PromptPay%3A0812345678%3A${total}THB&bgcolor=ffffff&color=1A1A1A&margin=2')`;
+    showScreen('qrpay');
+  } else {
+    finishOrder();
   }
+}
 
-  const btn = document.getElementById('orderBtn');
-  btn.textContent = '⏳ กำลังส่ง...';
-  btn.style.opacity = '0.7';
+function confirmPayment() { finishOrder(); }
 
-  const total = currentItem.price + (toppingOn ? 10 : 0);
+function finishOrder() {
+  const name=document.getElementById('custName').value.trim();
+  const phone=document.getElementById('custPhone').value.trim();
+  const addr=document.getElementById('addrInput').value.trim();
+  const total=cartTotal();
 
-  // Build summary
-  const summaryItems = [
-    { label: currentItem.name, price: `฿${currentItem.price}` },
-    ...(toppingOn ? [{ label: 'วิปครีม', price: '฿10' }] : []),
-    { label: deliveryType === 'delivery' ? `จัดส่ง → ${address}` : 'รับที่ร้าน', price: 'ฟรี' },
-  ];
+  const itemsText=cart.map(c=>{
+    const m=MENU.find(x=>x.id===c.menuId);
+    return `${m.name}${c.topping?'+วิปครีม':''} x${c.qty} = ฿${(m.price+(c.topping?10:0))*c.qty}`;
+  }).join('\n');
 
-  const summaryHTML = summaryItems.map(s =>
-    `<div class="summary-row"><span>${s.label}</span><span>${s.price}</span></div>`
-  ).join('') +
-  `<div class="summary-row total"><span>รวมทั้งหมด</span><span class="price">฿${total}</span></div>`;
-
-  // Simulate sending email via mailto link (or EmailJS / formspree in production)
-  const emailSubject = encodeURIComponent(`BREW ORDER: ${currentItem.name} x1`);
-  const emailBody = encodeURIComponent(
-    `📋 ออเดอร์ใหม่จาก BREW\n` +
-    `─────────────────\n` +
-    `ชื่อ: ${name}\n` +
-    `เบอร์: ${phone}\n` +
-    `สินค้า: ${currentItem.name}\n` +
-    `ท็อปปิ้ง: ${toppingOn ? 'วิปครีม (+฿10)' : 'ไม่มี'}\n` +
-    `รับสินค้า: ${deliveryType === 'delivery' ? `ส่งที่บ้าน – ${address}` : 'รับที่ร้าน'}\n` +
-    `ยอดรวม: ฿${total}\n` +
-    `─────────────────\n`
+  const subject=encodeURIComponent(`BREW ORDER – ${name} – ฿${total}`);
+  const body=encodeURIComponent(
+    `📋 ออเดอร์ใหม่จาก BREW\n──────────────────\n`+
+    `ชื่อ: ${name}\nเบอร์: ${phone}\n\nสินค้า:\n${itemsText}\n\n`+
+    `รับสินค้า: ${deliveryType==='delivery'?`ส่งที่บ้าน – ${addr}`:'รับที่ร้าน'}\n`+
+    `ชำระเงิน: ${paymentType==='qr'?'สแกน QR PromptPay':'เก็บเงินปลายทาง'}\n`+
+    `ยอดรวม: ฿${total}\n──────────────────`
   );
+  window.location.href=`mailto:xsararex@gmail.com?subject=${subject}&body=${body}`;
 
-  // Open mail client
-  window.location.href = `mailto:xsararex@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+  const sumRows=cart.map(c=>{
+    const m=MENU.find(x=>x.id===c.menuId);
+    return `<div class="s-row"><span>${m.name}${c.topping?'+วิปครีม':''} x${c.qty}</span><span>฿${(m.price+(c.topping?10:0))*c.qty}</span></div>`;
+  }).join('');
 
-  setTimeout(() => {
-    document.getElementById('successSub').innerHTML =
-      `ขอบคุณคุณ <strong>${name}</strong> ที่สั่งกับ BREW<br>` +
-      (deliveryType === 'delivery'
-        ? `เราจะจัดส่งไปที่ท่านเร็วๆ นี้ 🛵`
-        : `โปรดมารับที่ร้านได้เลย 🏪`);
+  document.getElementById('successSub').innerHTML=
+    `ขอบคุณคุณ <strong>${name}</strong> ที่สั่งกับ BREW<br>`+
+    (deliveryType==='delivery'?`จัดส่งไปที่ท่านเร็วๆ นี้ 🛵`:`โปรดมารับที่ร้านได้เลย 🏪`)+
+    `<br><small style="color:#aaa">${paymentType==='cod'?'💵 ชำระเงินปลายทาง':'📲 ชำระ QR แล้ว'}</small>`;
 
-    document.getElementById('successSummary').innerHTML = summaryHTML;
-    btn.textContent = 'สั่งเลย ☕';
-    btn.style.opacity = '1';
-    showScreen('success');
-  }, 1200);
+  document.getElementById('successSummary').innerHTML=
+    sumRows+`<div class="s-row total"><span>รวมทั้งหมด</span><span class="sp">฿${total}</span></div>`;
+
+  showScreen('success');
+}
+
+function resetAll() {
+  cart=[];
+  renderMenu();
+  showScreen('home');
 }
 
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelector('.phone').scrollTop = 0;
+  if (id==='cart') renderCart();
 }
 
-// Init
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
 renderMenu();
 </script>
 </body>
